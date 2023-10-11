@@ -1,0 +1,248 @@
+<link rel="stylesheet" href="/static/water/materialize.min.css"/>
+<script type="text/javascript" src="/static/water/materialize.min.js"></script>
+
+#parse("common_app.vm")
+
+<div class="container" style="padding-left: 0px;width: 1200px;">
+
+    <div>
+        ## 搜索
+        <div id="search_layer">
+            <input type="text" id="project_search" placeholder="查找项目">
+            <span class="glyphicon glyphicon-search form-control-feedback1"></span>
+        </div>
+    </div>
+
+    <!-- demo list -->
+    <div class="course-list" id="project_list">
+        #foreach($item in $!reposList)
+            <div class="item" id="$!{item.lowerName}">
+                <div class="hover-active">
+                    <div data-v-48a07948="" class="course-title single-line">
+                        <span>$!{item.lowerName}</span>
+                    </div>
+                    <div>
+                        #if("vladmihalcea" == $!{item.lowerName})
+                            #appPeopleImg($!{item.lowerName})
+                        #else
+                            #set($appType = $velocityCount % 20)
+                            #appTypeImg($!{appType})
+                        #end
+
+##                        <img data-v-48a07948="" alt="深入浅出搞定 React" class="course-img" data-src="https://s0.lgstatic.com/i/image/M00/5D/09/Ciqc1F-D0-OAZTxlAABYS9gye8s357.png" src="https://s0.lgstatic.com/i/image/M00/5D/09/Ciqc1F-D0-OAZTxlAABYS9gye8s357.png" lazy="loaded">
+                        <div class="right-container">
+                            <div data-v-48a07948="" class="brief single-line">
+                                #if("$!{item.description}" != "")
+                                $!{item.description}
+                            #else
+                                    $!{item.lowerName}
+                                #end
+                            </div>
+                            <div data-v-48a07948="" class="teacher single-line">
+                                $timeUtil.toDateUnixTime($!{item.createdUnix},"yyyy-MM-dd HH:mm:ss")
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        #end
+
+    </div>
+</div>
+
+<script type="text/javascript">
+   ## 兼容IE
+    function contains(arr,val){
+        for(var i=0;i<arr.length;i++){
+            if(arr[i] == val){
+                return true;
+            }
+        }
+    }
+
+    $(function(){
+
+        $(".item").click(function () {
+            var appName = $(this).attr("id");
+            // window.location.href = "http://175.24.228.127:3000/mengka/"+appName;
+
+            window.open("http://101.33.203.97:3000/934734735/$!{parentAppName}", "_blank");
+        });
+
+        $('#project_search').bind('input propertychange',function(){
+            var searchText = $('#project_search').val();
+            // searchText = searchText.toLowerCase();
+            var $searchLi = "";
+            if(searchText != ""){
+                searchLi = $('#project_list').find('span:contains('+searchText+')').parent().parent().parent();
+                if(searchLi.length <= 0){
+                    var items = document.getElementById("project_list").children;
+                    for(var i=0;i<items.length;i++){
+                        items[i].style.display = "none";
+
+                    }
+                }else{
+                    var mycars = new Array();
+                    for(var i=0;i<searchLi.length;i++){
+                        mycars[i] = searchLi[i].getAttribute("id");
+                    }
+                    console.log("----, mycars = "+JSON.stringify(mycars));
+                    var items = document.getElementById("project_list").children;
+                    for(var i=0;i<items.length;i++){
+                        var itemId = items[i].getAttribute("id");
+                        if(!contains(mycars,itemId)){
+                            items[i].style.display = "none";
+                        }else{
+                            items[i].style.display = "block";
+                        }
+                    }
+                }
+            }else{
+                var items = document.getElementById("project_list").children;
+                for(var i=0;i<items.length;i++){
+                    items[i].style.display = "block";
+                }
+            }
+        });
+    });
+</script>
+
+<style type="text/css" media="screen">
+    body{
+        background-color: rgba(191, 191, 191, 0.26);
+    }
+    * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-font-smoothing: antialiased;
+    }
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    .course-list{
+        width: 1200px;
+        overflow-x: hidden;
+        padding-top: 10px;
+        padding-bottom: 20px;
+    }
+    .item{
+        display: inline-block;
+        width: 272px;
+        /*border-radius: 8px;*/
+        float: left;
+        position: relative;
+        margin-top: 15px;
+        margin-left: 16px;
+        margin-bottom: 0;
+        cursor: pointer;
+    }
+    .hover-active{
+        padding: 15px 27px 23px 27px;
+        box-sizing: border-box;
+        -webkit-transition: all .3s ease;
+        transition: all .3s ease;
+        margin-top: 0;
+        background: #fff;
+        /*border-radius: 8px;*/
+        width: 272px;
+        position: relative;
+    }
+    .course-img{
+        width: 60px;
+        height: 52px;
+        float: right;
+        border-radius: 5px;
+        margin-top: 3px;
+    }
+    .right-container{
+        padding-top: 5px;
+    }
+    .course-title{
+        color: #333;
+        font-size: 18px;
+        line-height: 25px;
+    }
+    .single-line {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .brief, .teacher {
+        color: #999;
+        font-size: 12px;
+        margin-top: 4px;
+        line-height: 17px;
+    }
+    .course-list .item{
+        border: 1px solid #EEE;
+    }
+    .course-list .item:hover {
+        -webkit-box-shadow: 0 0 10px 0 rgba(56, 81, 76, .12);
+        -moz-box-shadow: 0 0 10px 0 rgba(56, 81, 76, .12);
+        box-shadow: 0 0 10px 0 rgba(56, 81, 76, .12)
+    }
+    /*.course-list .item .single-line:hover {*/
+    /*color: #00b38a*/
+    /*}*/
+    #search_layer .form-control-feedback1{
+        left: 0;
+        filter: alpha(opacity=50);
+        opacity: 0.5;
+        position: absolute;
+        height: 70%;
+        align-items: center;
+        display: flex;
+    }
+    #search_layer{
+        float: right;
+        position: relative;
+        margin-right: 55px;
+    }
+    #project_search{
+        padding-left: 25px;
+    }
+
+    .btn-test {
+        height: 54px;
+        line-height: 54px;
+        text-decoration: none;
+        color: #fff;
+        text-align: center;
+        letter-spacing: .5px;
+        -webkit-transition: .2s ease-out;
+        transition: .2s ease-out;
+        cursor: pointer;
+        border: none;
+        border-radius: 2px;
+        padding: 0 2rem;
+        text-transform: uppercase;
+        display: inline-block;
+
+        -webkit-box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%), 0 3px 1px -2px rgb(0 0 0 / 20%);
+        box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%), 0 3px 1px -2px rgb(0 0 0 / 20%);
+    }
+    .btn-test:hover,.btn-test:visited,.btn-test:active {
+        color: #f5a3a3;
+        background-color: #2bbbad;
+        -webkit-box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2);
+        border: 0px solid #E57373;
+    }
+    .red.lighten-2{
+        margin-left: 16px;
+        margin-top: 6px;
+    }
+    .w-full{
+        --tw-text-opacity: 1;
+        color: rgba(85, 85, 85, var(--tw-text-opacity));
+        /*justify-content: center;*/
+        /*align-items: center;*/
+        /*display: flex;*/
+        float: right;
+    }
+    .text-7xl {
+        font-size: 4rem;
+        line-height: 1;
+    }
+</style>

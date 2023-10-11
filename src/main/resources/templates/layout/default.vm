@@ -1,0 +1,16 @@
+<html>
+<head>
+    <title>gogs-web</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+##    <script type="text/javascript" src="/webjars/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+</head>
+<body style="min-height: 2000px;padding-top: 70px;">
+
+    #parse("navbar.vm")
+
+    $body_content
+
+</body>
+</html>
